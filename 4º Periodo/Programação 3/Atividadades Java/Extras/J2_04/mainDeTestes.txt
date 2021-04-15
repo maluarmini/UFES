@@ -1,0 +1,173 @@
+ /*
+        // Testando as funções de relatório
+    
+        // Declara variáveis necessárias
+        ArrayList<Candidato> candidatos = new ArrayList<Candidato>();
+        ArrayList<Candidato> candidatosEleitos;
+        ArrayList<Partido> partidos = new ArrayList<Partido>();
+        Sistema sistema = new Sistema();
+
+        // FUTURO LOOP DE FUNCIONAMENTO DO PROGRAMA 
+        //while (scan.hasNext()){
+        //} 
+        
+        //Instancia candidatos estáticos para teste 
+        Candidato candidato = new Candidato();
+        candidato.setNumero(13123);
+        candidato.setVotosNominais(300);
+        candidato.setSituacao("Eleito");
+        candidato.setNome("Anna Flávia da Silva Castro");
+        candidato.setNomeUrna("Anninha do Povão");
+        candidato.setSexo("F");
+        candidato.setDataNasc("01/04/1998");
+        candidato.setDestinoVoto("Válido");
+        candidato.setNumeroPartido(13);
+        
+        Candidato candidato2 = new Candidato();
+        candidato2.setNumero(13001);
+        candidato2.setVotosNominais(800);
+        candidato2.setSituacao("Eleito");
+        candidato2.setNome("Julio Costa Braga");
+        candidato2.setNomeUrna("Julinho");
+        candidato2.setSexo("M");
+        candidato2.setDataNasc("01/04/1998");
+        candidato2.setDestinoVoto("Válido");
+        candidato2.setNumeroPartido(13);
+        
+        Candidato candidato3 = new Candidato();
+        candidato3.setNumero(17500);
+        candidato3.setVotosNominais(200);
+        candidato3.setSituacao("Suplente");
+        candidato3.setNome("Luiza Batista Laquini");
+        candidato3.setNomeUrna("Luiza");
+        candidato3.setSexo("F");
+        candidato3.setDataNasc("06/11/2000");
+        candidato3.setDestinoVoto("Válido");
+        candidato3.setNumeroPartido(17);
+
+        Candidato candidato4 = new Candidato();
+        candidato4.setNumero(17017);
+        candidato4.setVotosNominais(280);
+        candidato4.setSituacao("Eleito");
+        candidato4.setNome("Maria Luiza Armini");
+        candidato4.setNomeUrna("Malu");
+        candidato4.setSexo("F");
+        candidato4.setDataNasc("01/12/2000");
+        candidato4.setDestinoVoto("Válido");
+        candidato4.setNumeroPartido(17);
+        
+        candidatos.add(candidato);
+        candidatos.add(candidato2);
+        candidatos.add(candidato3);
+        candidatos.add(candidato4);
+
+        //Instancia partidos estáticos para teste  
+        Partido partido1 = new Partido();
+        partido1.setNumeroPartido(13);
+        partido1.setVotosLegendas(500);
+        partido1.setNomePartido("Partido dos Trabalhadores");
+        partido1.setSiglaPartido("PT");
+
+        Partido partido2 = new Partido();
+        partido2.setNumeroPartido(17);
+        partido2.setVotosLegendas(515);
+        partido2.setNomePartido("Democratas");
+        partido2.setSiglaPartido("DEM");
+
+        partidos.add(partido1);
+        partidos.add(partido2);
+        
+        //1 - NÚMERO DE VAGAS (= NÚMERO DE ELEITOS) [check]
+        double numeroVagas = sistema.retornaNumeroDeVagas(candidatos); //inicializa uma variavel para numero de vagas
+        System.out.println(String.format("Número de vagas: %.0f\n", numeroVagas)); //imprime 
+
+        //2 - CANDIDATOS ELEITOS (NOME COMPLETO E NA URNA), INDICANDO PARTIDO E NÚMERO DE VOTOS NOMINAIS [check]
+        candidatosEleitos = sistema.retornaCandidatosEleitos(candidatos); //chama função que importa candidatos eleitos para array list
+
+        //Imprime usando for:
+        System.out.println("Vereadores eleitos:");
+        for (int i=0; i<candidatosEleitos.size(); i++){
+            String partido = sistema.retornaSiglaPartido(partidos, candidatosEleitos.get(i).getNumeroPartido()); 
+            System.out.println(String.format("%d - ", i+1)+ candidatosEleitos.get(i).getNome() + " / " + candidatosEleitos.get(i).getNomeUrna() + String.format(" (%s, %d votos)", partido, candidatosEleitos.get(i).getVotosNominais()));
+        }
+        System.out.println();
+
+        //3 - CANDIDATOS MAIS VOTADOS EM ORDEM DESCRESCENTE DE VOTAÇÃO E RESPEITANDO O NÚMERO DE VAGAS - CONFERIR
+        Candidato candidatoMaisVotadoGeral = sistema.retornaCandidatoMaisVotado(candidatosEleitos);
+        System.out.println(candidatoMaisVotadoGeral.getNome());
+
+        //4 - CANDIDATOS NÃO ELEITOS E QUE SERIAM ELEITOS SE A VOTAÇÃO FOSSE MAJORITÁRIA
+        // Criar um array contendo os mais votados (ordem decrescente)
+        // Pega o array de eleitos e vê a diferença
+
+        ArrayList<Candidato> maisVotados = new ArrayList<Candidato>();
+        maisVotados = candidatos;
+
+        //candidatosMaisVotados = sistema.retornaArrayMaisVotados(candidatos, numeroVagas);
+
+        //5 - CANDIDATOS ELEITOS NO SISTEMA PROPORCIONAL VIGENTE QUE NÃO SERIAM ELEITOS SE A VOTAÇÃO FOSSE MAJORITÁRIA
+        
+        //6 - VOTOS TOTALIZADOS POR PARTIDO E NÚMERO DE CANDIDATOS ELEITOS [check]
+
+        System.out.println("Votação dos partidos e número de candidatos eleitos:");
+        for(int i=0; i<partidos.size(); i++){
+            System.out.print(String.format("%d - ", i+1) + partidos.get(i).getSiglaPartido() + " - " + partidos.get(i).getNumeroPartido() + String.format(", %.0f votos (%d nominais e %d de legenda), ", sistema.retornaTotalVotosPartido(candidatos, partidos.get(i).getNomePartido()), sistema.retornaQtdVotosNominaisPartido(candidatos, partidos.get(i).getNumeroPartido()), sistema.retornaQtdVotosLegendaPartido(partidos, partidos.get(i).getNumeroPartido()))); 
+            if (sistema.retornaQtdCandidatosEleitosPartido(candidatosEleitos, partidos.get(i).getNumeroPartido()) == 0 || sistema.retornaQtdCandidatosEleitosPartido(candidatosEleitos, partidos.get(i).getNumeroPartido()) == 1) System.out.println(String.format("%d candidato eleito", sistema.retornaQtdCandidatosEleitosPartido(candidatosEleitos, partidos.get(i).getNumeroPartido())));
+            else System.out.println(String.format("%d candidatos eleitos", sistema.retornaQtdCandidatosEleitosPartido(candidatosEleitos, partidos.get(i).getNumeroPartido())));
+        }
+        System.out.println();
+
+        //OBS: AQUI FALTA SUBSTITUIR O X PELO NUMERO DE VOTOS DO CANDIDATO
+        //7 - PRIMEIRO E ÚLTIMO COLOCADOS DE CADA PARTIDO (COM NOME DA URNA, NÚMERO DO CANDIDATO E TOTAL DE VOTOS NOMINAIS). PARTIDOS QUE NÃO POSSUÍREM CANDIDATOS COM UM NÚMERO POSITIVO DE VOTOS VÁLIDOS DEVEM SER IGNORADOS 
+        
+        //Variáveis Necessárias:
+        Candidato candidatoMaisVotado;
+        Candidato candidatoMenosVotado;
+
+        //Imprime:
+        System.out.println("Primeiro e último colocados de cada partido:");
+        for(int i=0; i<partidos.size(); i++){
+            candidatoMaisVotado = sistema.retornaPrimeiroCandidatoPartido(candidatos, partidos.get(i).getNumeroPartido());
+            candidatoMenosVotado = sistema.retornaUltimoCandidatoPartido(candidatos, partidos.get(i).getNumeroPartido());
+
+            System.out.println(String.format("%d - %s - %d, %s (%d, x votos) / %s (%d, x votos)", i+1, partidos.get(i).getSiglaPartido(), partidos.get(i).getNumeroPartido(), candidatoMaisVotado.getNomeUrna(), candidatoMaisVotado.getNumero(), candidatoMenosVotado.getNomeUrna(), candidatoMenosVotado.getNumero()));
+        }
+        System.out.println();
+
+        //8 - DISTRIBUIÇÃO DE ELEITOS POR FAIXA ETÁRIA
+        int rtn = candidatoMaisVotadoGeral.retornaIdadeCandidato("15/11/2020");
+
+        System.out.println(rtn);
+
+        //9 - DISTRIBUIÇÃO DE ELEITOS POR SEXO (NÚMERO + PORCENTAGEM) [check]
+        
+        //Variaveis necessárias:
+        double qtdF = sistema.RetornaQtdEleitosSexoFeminino(candidatosEleitos);
+        double porcentagemF = (qtdF/numeroVagas)*100;
+        double porcentagemM = ((numeroVagas - qtdF)/numeroVagas)*100;
+
+        //Imprime:
+        System.out.print("Eleitos, por sexo:\nFeminino: " + String.format("%.0f", qtdF));
+        System.out.println(String.format(" (%.2f", porcentagemF) + "%)");
+        System.out.print("Masculino: " + String.format("%.0f", (numeroVagas - qtdF)));
+        System.out.println(String.format(" (%.2f", porcentagemM) + "%)\n");
+
+        //10 - TOTAL DE VOTOS, TOTAL DE VOTOS NOMINAIS E TOTAL DE VOTOS DE LEGENDA [check]
+
+        //Variáveis necessárias:
+        double totalVotosValidos = sistema.retornaTotalVotosValidos(candidatos, partidos);
+        double totalVotosNominais = sistema.retornaTotalVotosNominais(candidatos);
+        double totalVotosLegenda = sistema.retornaTotalVotosLegenda( partidos);
+        double porcentagemVN = (totalVotosNominais/totalVotosValidos)*100;
+        double porcentagemVL = (totalVotosLegenda/totalVotosValidos)*100;
+
+    // Testando leitura de arquivo;
+    
+    }
+    //IDEIA QUE TIVE (LUIZA) -> FAZER FUNÇÕES DE IMPRIMIR -> EVITA ESSE EMARANHADO DE COISAS NA MAIN
+
+    // Candidatos nao eleitos;
+    // Candidatos eleitos
+
+    */
+   
